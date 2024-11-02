@@ -35,17 +35,20 @@ const CalendarPage: React.FC = () => {
         }
     };
 
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const { data } = await axios.get('http://localhost:4000/api/events', { withCredentials: true });
-                setEvents(data);
-            } catch (error) {
-                console.error('Error fetching events:', error);
-            }
-        };
+    const fetchEvents = async () => {
+        try {
+            const { data } = await axios.get('http://localhost:4000/api/events', { withCredentials: true });
+            setEvents(data);
+        } catch (error) {
+            console.error('Error fetching events:', error);
+        }
+    };
 
+    useEffect(() => {
         fetchEvents();
+        const interval = setInterval(fetchEvents, 60000); // Fetch events every minute
+
+        return () => clearInterval(interval); // Cleanup interval on component unmount
     }, []);
 
     return (
